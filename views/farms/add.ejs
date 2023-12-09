@@ -1,0 +1,43 @@
+<% layout('layouts/boilerplate') %>
+
+<nav>
+      <div class="logo">
+            <h1>My <span>Farm</span></h1>
+      </div>
+      <div class="links">
+            <ol>
+                  <li><a href="/home">Home</a></li>
+                  <li><a href="/farms" id="activeLink">Farms</a></li>
+                  <li><a href="/products">All Products</a></li>
+            </ol>
+      </div>
+</nav>
+
+<div class="formContainer">
+      <form action="/farms" method="post" id="formSubmit">
+            <h1>Add a Farm</h1>
+            <p>
+                  <label for="farmName">Farm Name</label><br>
+                  <input type="text" placeholder="name of your farm" id="farmName" name="name">
+            </p>
+            <p>
+                  <label for="location">Farm Location</label><br>
+                  <input type="text" name="location" id="location" placeholder="enter the location of your farm">
+            </p>
+            <p>
+                  <label for="email">Email</label><br>
+                  <input type="email" name="email" id="email" placeholder="enter your email address">
+            </p>
+            <p>
+                  <label for="description">Description</label><br>
+                  <textarea name="description" id="description" cols="30" rows="10" placeholder="write a short note about the farm you want to create"></textarea>
+            </p>
+            
+            
+            <button type="submit">Add Farm</button>
+      
+            <p class="toProducts"><a href="/farms"><<-all farms</a></p>
+      </form>
+</div>
+
+

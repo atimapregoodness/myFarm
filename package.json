@@ -1,0 +1,24 @@
+{
+  "name": "productApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "seed": "node seeds.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Atimapre Goodness",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "ejs-mate": "^4.0.0",
+    "express": "^4.18.2",
+    "joi": "^17.11.0",
+    "mate": "^0.21.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^7.5.2",
+    "uuid": "^9.0.1"
+  }
+}

@@ -1,0 +1,64 @@
+<title><%= farm.name %> Info_-Farm_-My Farm</title>
+<% layout('layouts/boilerplate') %>
+<div class="promptMsg">
+      <h1>Are you sure you want to Delete "<%= farm.name %>" ?</h1>
+
+      <div class="btns">
+            <button id="declineBtn">No</button>
+            <form action="/farms/<%=farm._id%>?_method=DELETE" method="POST">
+                  <button id="deleteBtn">Yes</button>
+            </form>
+      </div>
+</div>
+<nav>
+      <div class="logo">
+            <h1>My <span>Farm</span></h1>
+      </div>
+      <div class="links">
+            <ol>
+                  <li><a href="/home">Home</a></li>
+                  <li><a href="/farms" id="activeLink">Farms</a></li>
+                  <li><a href="/products">All Products</a></li>
+            </ol>
+      </div>
+</nav>
+
+
+<div class="farm">
+      <div class="farmInfo">
+            <h1><%= farm.name %></h1>
+            <% if (farm.description) {%>
+                  <h3><%= farm.description %></h3>
+            <% } else{%>
+                  <h5>Farm description not added!!!</h5>
+            <% } %>
+            <div class="contents">
+                  <h4>Farm Info:</h4>
+                  <h2>Location: <br><span id="mainText"><%= farm.location %></span></h2>
+                  <h2>Email: <br><span id="mainText"><%= farm.email %></span></h2>
+            </div>
+            <a href="/farms/<%= farm._id %>/edit"><button>Edit farm</button></a>
+            <div class="deleteBtn">
+                  <button id="promptDelete">Delete Farm</button>
+            </div>
+      </div>
+      <div class="products">
+            <h1 class="heading">Products:</h1>
+            <% if (!products.length) {%>
+                  <h1 id="notFound">No product added! please add a product</h1>
+            <%} %>
+            <div class="productContainer">
+                  <% for (let product of products){%>
+                        <div class="product">
+                              <h1><%= product.name %></h1>
+                              <h2>Price: <span>$<%= product.price %></span></h2>
+                              <a href="/products/<%=product._id%>"><button>View product</button></a>
+                        </div>
+                  <%} %>
+            </div>
+      </div>
+      <div id="btns">
+            <a href="<%=farm._id%>/products/add"><button id="addBtn">Add Products</button></a>
+            <a href="/farms"><button>view all Farms</button></a>
+      </div>
+</div>

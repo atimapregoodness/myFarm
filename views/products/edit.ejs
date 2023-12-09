@@ -1,0 +1,39 @@
+<title>Edit <%= product.name %>_-Products</title>
+
+<% layout('layouts/boilerplate') %>
+
+<nav>
+      <div class="logo">
+            <h1>My <span>Farm</span></h1>
+      </div>
+      <div class="links">
+            <ol>
+                  <li><a href="/home">Home</a></li>
+                  <li><a href="/farms" id="activeLink">Farms</a></li>
+                  <li><a href="/products">All Products</a></li>
+            </ol>
+      </div>
+</nav>
+
+<div class="formContainer">
+      <form action="/products/<%=product._id%>?_method=PUT" method="POST" id="formSubmit">
+            <h1>Edit '<span><%=product.name %></span>'</h1>
+            <p>
+                  <label for="productName">Product Name</label>
+                  <input type="text" placeholder="name of your product" id="productName" name="name" value="<%=product.name%>">
+            </p>
+            <p>
+                  <label for="productPrice">Price $</label>
+                  <input type="number" placeholder="price of your product" id="productPrice" name="price" value="<%= product.price %>">
+            </p>
+            <p>
+                  <select name="category" id="category" value="<%= product.category %>">
+                        <% for (let group of categories){ %>
+                              <option value="<%=group%>" <%=product.category === group ? 'selected': '' %>><%=group%></option>
+                        <% } %>
+                  </select>
+            </p>
+            <button type="submit">Edit</button>
+            <p class="cancelLink"><a href="/farms/<%=farmId%>" id="cancelLink">Cancel</a></p>
+      </form>
+</div>

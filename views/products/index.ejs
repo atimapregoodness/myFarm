@@ -1,0 +1,35 @@
+<title>Products</title>
+<% layout('layouts/boilerplate') %>
+
+<nav>
+      <div class="logo">
+            <h1>My <span>Farm</span></h1>
+      </div>
+      <div class="links">
+            <ol>
+                  <li><a href="/home">Home</a></li>
+                  <li><a href="/farms">Farms</a></li>
+                  <li><a href="/products" id="activeLink">All Products</a></li>
+            </ol>
+      </div>
+</nav>
+
+<div class="container">
+      <h1 class="heading"><%=category%></h1>
+      <% if (!products.length){%>
+            <h1 id="notFound">No products Added yet!</h1>
+      <% } %>
+      <div class="products">
+            <% for (let product of products){%>
+                  <div class="product">
+                        <h1><%= product.name %></h1>
+                        <h2>Price: <span>$<%= product.price %></span></h2>
+                        <a href="/products/<%=product._id%>/info"><button>more</button></a>
+                  </div>
+            <%} %>
+      </div>
+      
+      <%if(category !== 'All Products'){ %>
+            <h5><a href="/products"><<--All Products</a></h5>
+      <% } %>
+</div>
