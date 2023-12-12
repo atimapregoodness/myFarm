@@ -9,8 +9,9 @@ const appError = require('./utils/appError')
 const wrapAsync = require('./utils/wrapAsync')
 const { productSchema } = require('./schemas/validateProduct')
 const Farm = require('./models/farm')
+const flash = require('connect-flash')
 
-const farmRoute = require('./routes/farmRoute')
+// const farmRoute = require('./routes/farmRoute')
 
 const categories = [
       'fruits',
@@ -38,6 +39,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(flash())
 
 
 app.get('/', (req, res) => {
@@ -47,7 +49,76 @@ app.get('/', (req, res) => {
 
 //farm routs ++++++++++++++++++++
 
-app.use('/farms', farmRoute)
+app.get('/farms', async (req, res) => {
+    const farms = await Farm.find({})
+    res.render('farms/index', {farms})
+})
+
+app.get('/farms/add', (req, res) => {
+    res.render('farms/add')
+})
+
+
+app.get('/farms/:id', async (req, res) => {
+    const farm = await Farm.findById(req.params.id).populate('products')
+    const products = farm.products
+    res.render('farms/farmInfo', {farm, products})
+})
+
+app.get('/farms/:id/edit', async (req, res) => {
+    const farm = await Farm.findById(req.params.id)
+    res.render('farms/edit', {farm})
+})
+
+
+app.get('/farms/:id/products/add', async(req, res) => {
+    const {id} = req.params
+    const farm = await Farm.findById(id)
+    res.render('products/add', {categories, farm})
+})
+
+
+
+app.post('/farms', async (req, res) =>{
+    const farm= new Farm(req.body)
+    await farm.save()
+    res.redirect('farms')
+})
+
+app.post('/farms/:id/products', async (req, res) => {
+    const { id } = req.params;
+    const { name, price, category } = req.body;
+    
+    const farm = await Farm.findById(id).populate('products')
+
+    const product = new Product({ name: name, price: price, category: category })
+    product.farm = farm;
+    await product.save()
+
+    farm.products.push(product)
+    farm.save()
+
+    res.redirect(`/${id}`)
+})
+
+app.delete('/farms/:id', async (req, res) => {
+    const { id } = req.params
+    const farm = await Farm.findByIdAndDelete(id).populate('products')
+
+    if (farm.products.length) {
+          await Product.deleteMany({ _id: { $in: farm.products } })
+          console.log(farm)
+    }
+
+    res.redirect('')
+
+})
+
+app.put('/farms/:id', wrapAsync (async (req, res, next) => {
+    const { id } = req.params;
+    const farm = await Farm.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
+    res.redirect(`${farm._id}`)  
+}))
 
 
 
@@ -105,7 +176,8 @@ app.get('/products/:id/info', wrapAsync(async (req, res, next) => {
 app.post('/products', productValidator, wrapAsync(async (req, res, next) => {
       const foundProduct = new Product(req.body)
       await foundProduct.save()
-      res.redirect(`products/${foundProduct._id}`)
+      // req.flash('success', `Successfully added '${foundProduct.name}'`)
+      res.redirect(`/products/${foundProduct._id}`)
 }))
 
 
