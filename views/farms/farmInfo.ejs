@@ -1,12 +1,11 @@
 <title><%= farm.name %> Info_-Farm_-My Farm</title>
 <% layout('layouts/boilerplate') %>
 <div class="promptMsg">
-      <h1>Are you sure you want to Delete "<%= farm.name %>" ?</h1>
-
-      <div class="btns">
-            <button id="declineBtn">No</button>
+      <div class="container">
+                  <button id="declineBtn">x</button>
+            <h1>Are you sure you want to Delete<p> "<%= farm.name %>" ?</p></h1>
             <form action="/farms/<%=farm._id%>?_method=DELETE" method="POST">
-                  <button id="deleteBtn">Yes</button>
+                  <button id="deleteBtn">Delete</button>
             </form>
       </div>
 </div>

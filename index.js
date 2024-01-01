@@ -29,7 +29,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/farmProducts', { useNewUrlParser: tr
       console.log(err)
 });
 
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -41,6 +40,11 @@ app.use(methodOverride('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(flash())
 
+
+// app.use((req, res, next) => {
+//       res.locals.messages = req.flash('success')
+//       next()
+// })
 
 app.get('/', (req, res) => {
       res.redirect('/home')
@@ -59,11 +63,12 @@ app.get('/farms/add', (req, res) => {
 })
 
 
-app.get('/farms/:id', async (req, res) => {
-    const farm = await Farm.findById(req.params.id).populate('products')
-    const products = farm.products
-    res.render('farms/farmInfo', {farm, products})
-})
+app.get('/farms/:id', wrapAsync( async (req, res, next) => {
+      const farm = await Farm.findById(req.params.id).populate('products')
+      if (!farm) throw new appError('Farm Not Found', 404);
+      const products = farm.products
+      res.render('farms/farmInfo', {farm, products})
+}))
 
 app.get('/farms/:id/edit', async (req, res) => {
     const farm = await Farm.findById(req.params.id)
@@ -82,10 +87,10 @@ app.get('/farms/:id/products/add', async(req, res) => {
 app.post('/farms', async (req, res) =>{
     const farm= new Farm(req.body)
     await farm.save()
-    res.redirect('farms')
+    res.redirect(`/farms/${farm._id}`)
 })
 
-app.post('/farms/:id/products', async (req, res) => {
+app.post('/farms/:id/products', wrapAsync( async (req, res) => {
     const { id } = req.params;
     const { name, price, category } = req.body;
     
@@ -97,9 +102,10 @@ app.post('/farms/:id/products', async (req, res) => {
 
     farm.products.push(product)
     farm.save()
+//     req.flash('success', 'Successfully added products')
 
-    res.redirect(`/${id}`)
-})
+    res.redirect(`/farms/${id}`)
+}))
 
 app.delete('/farms/:id', async (req, res) => {
     const { id } = req.params
@@ -110,14 +116,14 @@ app.delete('/farms/:id', async (req, res) => {
           console.log(farm)
     }
 
-    res.redirect('')
+    res.redirect('/farms')
 
 })
 
 app.put('/farms/:id', wrapAsync (async (req, res, next) => {
     const { id } = req.params;
     const farm = await Farm.findByIdAndUpdate(id, req.body, { runValidators: true, new: true })
-    res.redirect(`${farm._id}`)  
+    res.redirect(`/farms/${farm._id}`)  
 }))
 
 
@@ -156,10 +162,8 @@ app.get('/products/:id', wrapAsync(async (req, res, next) => {
       const { id } = req.params;
       const foundProduct = await Product.findById(id).populate('farm')
       if (!foundProduct) throw new appError('Product Not Found', 404)
-      
-      const farmId = foundProduct.farm._id
-      console.log(farmId)
-      
+      const farmId = foundProduct.farm._id     
+
       res.render('products/productInfo', { foundProduct, categories, farmId})
 }))
 
@@ -172,14 +176,6 @@ app.get('/products/:id/info', wrapAsync(async (req, res, next) => {
       
       res.render('products/info', { foundProduct, categories, farmId})
 }))
-
-app.post('/products', productValidator, wrapAsync(async (req, res, next) => {
-      const foundProduct = new Product(req.body)
-      await foundProduct.save()
-      // req.flash('success', `Successfully added '${foundProduct.name}'`)
-      res.redirect(`/products/${foundProduct._id}`)
-}))
-
 
 app.get('/products/:id/edit', wrapAsync(async (req, res, next) => {
       const { id } = req.params;
@@ -212,7 +208,7 @@ app.use((err, req, res, next) => {
             next(new appError('Page not found', 404))
       }
       else if (err.status === 404) {
-            next(new appError('Page not Found', 404))
+            next(new appError(err.message, 404))
       }
       else if (err.status === 400) {
             next(new appError(err.message, 400))

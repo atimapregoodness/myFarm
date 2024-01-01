@@ -155,6 +155,7 @@ h4 {
 .farmInfo {
   width: 100%;
   background-color: #111111;
+  background-image: url(/assets/ethan-hoover-eIVJAkj1uCs-unsplash.jpg);
   padding: 4em;
   padding-top: 7em;
 }
@@ -280,24 +281,38 @@ h4 {
   z-index: 99999;
   position: fixed;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.911);
+  background-color: rgba(0, 0, 0, 0.678);
   height: 60em;
 }
+.promptShow .container {
+  background-color: #ffffff;
+  margin-top: 15em;
+  width: 15em;
+  padding: 0.2em;
+}
 .promptShow h1 {
-  font-size: 40px;
-  color: #fff;
+  font-size: 14px;
+  color: #000000;
   text-align: center;
-  margin-top: 8em;
-  padding-bottom: 2em;
+  padding-bottom: 0.5em;
+  padding-top: 0em;
 }
 .promptShow .btns {
   display: flex;
-  width: fit-content;
-  margin: auto;
 }
-.promptShow button {
-  width: 7em;
-  margin-left: 1em;
+.promptShow form {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+.promptShow #declineBtn {
+  margin-top: 0;
+  font-size: 30px;
+  width: 1em;
+  padding: 0;
+  margin-top: 0;
+  background: none;
+  margin-left: 85%;
 }
 .promptShow #deleteBtn {
   background: rgb(179, 16, 16);
@@ -382,4 +397,21 @@ h4 {
 
 #mainText {
   color: #5a5a5a;
+}
+
+.error {
+  display: grid;
+  place-items: center;
+  padding-top: 10em;
+}
+.error h1 {
+  color: #ff0000;
+  font-size: 70px;
+}
+.error h3 {
+  font-size: 30px;
+}
+.error a {
+  font-size: 18px;
+  padding-top: 1em;
 }/*# sourceMappingURL=style.css.map */
